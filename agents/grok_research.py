@@ -58,7 +58,7 @@ try:
     print(answer)
 
 
- except urllib.error.HTTPError as error:
+except urllib.error.HTTPError as error:
     print("Grok API returned HTTP status:", error.code)
     details = error.read().decode("utf-8", errors="replace")
     print("API error details:", details[:3000])
