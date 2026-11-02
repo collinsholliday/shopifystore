@@ -1,0 +1,39 @@
+
+name: Empire OS - Manual Grok Research
+
+on:
+  workflow_dispatch:
+    inputs:
+      research_prompt:
+        description: "What should Grok research?"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository files
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run Grok research
+        env:
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          GROK_PROMPT: ${{ inputs.research_prompt }}
+        run: python agents/grok_research.py
+
+      - name: Save research result
+        uses: actions/upload-artifact@v4
+        with:
+          name: empire-os-grok-research
+          path: grok-research-result.md
+          if-no-files-found: error
