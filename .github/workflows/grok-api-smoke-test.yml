@@ -1,0 +1,54 @@
+name: Grok API Connection Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-grok:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send one minimal request to Grok
+        env:
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+        run: |
+          set -e
+
+          if [ -z "$XAI_API_KEY" ]; then
+            echo "Missing XAI_API_KEY secret."
+            exit 1
+          fi
+
+          response=$(curl -sS --max-time 90 \
+            -w '\n%{http_code}' \
+            https://api.x.ai/v1/responses \
+            -H "Authorization: Bearer $XAI_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "grok-4.7",
+              "input": "Reply with exactly: GROK_CONNECTED",
+              "max_output_tokens": 16,
+              "store": false
+            }')
+
+          status="${response##*$'\n'}"
+          body="${response%$'\n'*}"
+
+          if [ "$status" != "200" ]; then
+            echo "Grok API request failed. HTTP status: $status"
+            echo "$body" | jq -r '.error.message // "No error details returned."'
+            exit 1
+          fi
+
+          echo "GROK API CONNECTION SUCCESSFUL"
+          echo "$body" | jq -r '
+            [.output[]? |
+             select(.type == "message") |
+             .content[]? |
+             select(.type == "output_text") |
+             .text] | join("")
+          '
+          echo "Usage:"
+          echo "$body" | jq '.usage'
