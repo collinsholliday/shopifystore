@@ -36,19 +36,13 @@ jobs:
           status="${response##*$'\n'}"
           body="${response%$'\n'*}"
 
-          if [ "$status" != "200" ]; then
+                    if [ "$status" != "200" ]; then
             echo "Grok API request failed. HTTP status: $status"
-            echo "$body" | jq -r '.error.message // "No error details returned."'
+            echo "$body" | jq -r 'if type == "object" then (.error.message // .message // tostring) else tostring end'
             exit 1
           fi
 
           echo "GROK API CONNECTION SUCCESSFUL"
-          echo "$body" | jq -r 'if type == "object" then (.error.message // .message // tostring) else tostring end'
-            [.output[]? |
-             select(.type == "message") |
-             .content[]? |
-             select(.type == "output_text") |
-             .text] | join("")
-          '
+          echo "$body" | jq -r '[.output[]? | select(.type == "message") | .content[]? | select(.type == "output_text") | .text] | join("")'
           echo "Usage:"
           echo "$body" | jq '.usage'
