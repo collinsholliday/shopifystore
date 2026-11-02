@@ -4,7 +4,7 @@ name: Empire OS - Manual Grok Research
 on:
   workflow_dispatch:
     inputs:
-      research_prompt:Analyze successful Shopify lifestyle and digital-product stores. Identify proven storefront design patterns, customer needs, marketing hooks, and three low-cost digital product opportunities for a warm minimalist home-organization brand. Separate verified facts from estimates. Recommend a zero-upfront-cost strategy. Include competitor examples and sources where possible.
+      research_prompt: Analyze successful Shopify lifestyle and digital-product stores. Identify proven storefront design patterns, customer needs, marketing hooks, and three low-cost digital product opportunities for a warm minimalist home-organization brand. Separate verified facts from estimates. Recommend a zero-upfront-cost strategy. Include competitor examples and sources where possible.
         description: "What should Grok research?"
         required: true
         type: string
