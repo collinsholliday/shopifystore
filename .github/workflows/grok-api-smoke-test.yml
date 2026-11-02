@@ -43,7 +43,7 @@ jobs:
           fi
 
           echo "GROK API CONNECTION SUCCESSFUL"
-          echo "$body" | jq -r '
+          echo "$body" | jq -r 'if type == "object" then (.error.message // .message // tostring) else tostring end'
             [.output[]? |
              select(.type == "message") |
              .content[]? |
