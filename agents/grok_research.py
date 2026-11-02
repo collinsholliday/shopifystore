@@ -57,6 +57,7 @@ try:
     print("Research completed. Result saved securely as an artifact.")
     print(answer)
 
+
  except urllib.error.HTTPError as error:
     print("Grok API returned HTTP status:", error.code)
     details = error.read().decode("utf-8", errors="replace")
