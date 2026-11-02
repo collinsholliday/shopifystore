@@ -36,7 +36,7 @@ jobs:
           status="${response##*$'\n'}"
           body="${response%$'\n'*}"
 
-if [ "$status" != "200" ]; then
+          if [ "$status" != "200" ]; then
             echo "Grok API request failed. HTTP status: $status"
             echo "$body" | jq -r 'if type == "object" then (.error.message // .message // tostring) else tostring end'
             exit 1
