@@ -57,9 +57,8 @@ try:
     print("Research completed. Result saved securely as an artifact.")
     print(answer)
 
-except urllib.error.HTTPError as error:
+ except urllib.error.HTTPError as error:
     print("Grok API returned HTTP status:", error.code)
-    raise SystemExit("Research request failed. Check the API configuration.")
-except Exception as error:
-    print("Research failed:", str(error))
-    raise SystemExit(1)
+    details = error.read().decode("utf-8", errors="replace")
+    print("API error details:", details[:3000])
+    raise SystemExit("Research request failed.")
